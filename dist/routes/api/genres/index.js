@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const genres_1 = require("../../../controller/genres");
+const verifyToken_1 = require("../../../middlewares/verifyToken");
+const verifyRole_1 = require("../../../middlewares/verifyRole");
+const router = (0, express_1.Router)();
+router.get('/', genres_1.getAll);
+router.get("/:genreId", genres_1.getById);
+router.post("/", verifyToken_1.verifyToken, (0, verifyRole_1.verifyRoles)('admin', 'owner'), genres_1.create);
+router.put("/:genreId", verifyToken_1.verifyToken, (0, verifyRole_1.verifyRoles)('admin', 'owner'), genres_1.updateById);
+router.delete("/:genreId", verifyToken_1.verifyToken, (0, verifyRole_1.verifyRoles)('admin', 'owner'), genres_1.deleteById);
+exports.default = router;

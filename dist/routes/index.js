@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const api_1 = require("./api");
+const router = (0, express_1.Router)();
+router.use('/auth', api_1.authRouting);
+router.use('/users', api_1.usersRouting);
+router.use('/genres', api_1.genresRouting);
+router.use('/books', api_1.booksRouting);
+router.use('/upload', api_1.uploadRouting);
+router.use('/authors', api_1.authorsRouting);
+router.use('/category', api_1.categoriesRouting);
+router.use('/news', api_1.newsRouting);
+exports.default = router;

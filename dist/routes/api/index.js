@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.categoriesRouting = exports.authorsRouting = exports.uploadRouting = exports.booksRouting = exports.genresRouting = exports.usersRouting = exports.authRouting = exports.newsRouting = void 0;
+var news_1 = require("./news");
+Object.defineProperty(exports, "newsRouting", { enumerable: true, get: function () { return __importDefault(news_1).default; } });
+var auth_1 = require("./auth");
+Object.defineProperty(exports, "authRouting", { enumerable: true, get: function () { return __importDefault(auth_1).default; } });
+var users_1 = require("./users");
+Object.defineProperty(exports, "usersRouting", { enumerable: true, get: function () { return __importDefault(users_1).default; } });
+var genres_1 = require("./genres");
+Object.defineProperty(exports, "genresRouting", { enumerable: true, get: function () { return __importDefault(genres_1).default; } });
+var books_1 = require("./books");
+Object.defineProperty(exports, "booksRouting", { enumerable: true, get: function () { return __importDefault(books_1).default; } });
+var upload_1 = require("./upload");
+Object.defineProperty(exports, "uploadRouting", { enumerable: true, get: function () { return __importDefault(upload_1).default; } });
+var authors_1 = require("./authors");
+Object.defineProperty(exports, "authorsRouting", { enumerable: true, get: function () { return __importDefault(authors_1).default; } });
+var categories_1 = require("./categories");
+Object.defineProperty(exports, "categoriesRouting", { enumerable: true, get: function () { return __importDefault(categories_1).default; } });

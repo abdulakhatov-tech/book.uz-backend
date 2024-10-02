@@ -1,20 +1,19 @@
 import BookModel from "../../models/book";
 
+
+
+
 class BooksService {
   constructor() {}
 
   async getAllBooks({ page, limit, sort, asc, filters }: any) {
     const query: any = {};
 
-    console.log(page, limit, sort, asc, filters)
-
     // Genre filter
     if (filters.genreIds) {
-      if(Array.isArray( filters.genreIds)) {
-        query.genre = { $in: filters.genreIds };
-      } else {
-        query.genre = filters.genreIds;
-      }
+      query.genre = Array.isArray(filters.genreIds)
+        ? { $in: filters.genreIds }
+        : filters.genreIds;
     }
 
     // Price Range filter
@@ -27,21 +26,16 @@ class BooksService {
 
     // Language filter
     if (filters.language) {
-      if(Array.isArray(filters.language)) {
-        query.language = { $in: filters.language };
-      } else {
-        query.language = filters.language;
-      }
-      
+      query.language = Array.isArray(filters.language)
+        ? { $in: filters.language }
+        : filters.language;
     }
 
     // Author filter
-    if (filters.authorId) {
-      if(Array.isArray(filters.authorIds)) {
-        query.author = { $in: filters.authorIds };
-      } else {
-        query.author = filters.authorId;
-      }
+    if (filters.authorIds) {
+      query.author = Array.isArray(filters.authorIds)
+        ? { $in: filters.authorIds }
+        : filters.authorIds;
     }
 
     // Sorting logic
@@ -52,7 +46,7 @@ class BooksService {
     }
 
     const sortField = sortOptions[sort] || 'createdAt';
-    const sortOrder = asc === "asc"? 1 : -1;
+    const sortOrder = asc === 1 ? 1 : -1;
 
     const skip = (page - 1) * limit;
 
@@ -74,7 +68,7 @@ class BooksService {
       })
       .sort({ [sortField]: sortOrder })
       .skip(skip)
-      .limit(parseInt(limit, 10))
+      .limit(limit)
       .exec();
 
     return {

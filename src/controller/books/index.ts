@@ -25,44 +25,55 @@ const booksService = new BooksService();
 const getAll = async (req: Request, res: Response) => {
   try {
     const {
-      page = 1,
-      limit = 9,
-      genreIds,
-      fromPrice = 0,
-      toPrice = 1000000,
-      language,
-      authorIds,
+      page = "1",
+      limit = "9",
+      genreIds = "",
+      fromPrice = "0",
+      toPrice = "1000000",
+      language = "",
+      authorIds = "",
       sort = "createdAt",
-      asc = -1,
+      asc = "-1",
     } = req.query;
 
-    const filters = {
-      genreIds,
-      fromPrice: Number(fromPrice),
-      toPrice: Number(toPrice),
-      language,
-      authorIds,
-    };
+    const pageNum = parseInt(page as string, 10);
+    const limitNum = parseInt(limit as string, 10);
+    const fromPriceNum = parseFloat(fromPrice as string);
+    const toPriceNum = parseFloat(toPrice as string);
+    const ascNum = parseInt(asc as string, 10);
 
-    const data = await booksService.getAllBooks({
-      page: Number(page),
-      limit: Number(limit),
+    // Construct filters, only include if defined and valid
+    const filters: Record<string, any> = {};
+    
+    if (genreIds) filters.genreIds = genreIds;
+    if (!isNaN(fromPriceNum)) filters.fromPrice = fromPriceNum;
+    if (!isNaN(toPriceNum)) filters.toPrice = toPriceNum;
+    if (language) filters.language = language;
+    if (authorIds) filters.authorIds = authorIds;
+
+    const { books, totalBooks, totalPages } = await booksService.getAllBooks({
+      page: pageNum,
+      limit: limitNum,
       sort,
-      asc: Number(asc),
+      asc: ascNum,
       filters,
     });
 
-    res.status(200).json({
+    // Return a well-structured JSON response
+    return res.status(200).json({
       status: "success",
-      message: "ok",
-      data: data.books || [],
+      message: "Books fetched successfully",
+      data: books || [],
       pagination: {
-        totalBooks: data.totalBooks,
-        totalPages: data.totalPages,
-        currentPage: parseInt(page as string),
+        totalBooks,
+        totalPages,
+        currentPage: pageNum,
+        limit: limitNum,
       },
     });
+
   } catch (error) {
+    // Handle errors with proper context
     return apiErrorHandler(res, error);
   }
 };

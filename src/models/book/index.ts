@@ -76,6 +76,12 @@ const bookSchema = new Schema(
       type: Number,
       default: 0,
     },
+    ratedBy: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
     rating: {
       type: Number,
       default: 0,

@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("../../models");
+const book_1 = __importDefault(require("../../models/book"));
 class AuthorsService {
     constructor() { }
     getAllAuthors(page, limit) {
@@ -17,18 +21,18 @@ class AuthorsService {
             const skip = (page - 1) * limit;
             const [authors, total] = yield Promise.all([
                 models_1.AuthorModel.find().skip(skip).limit(limit).exec(),
-                models_1.AuthorModel.find().exec()
+                models_1.AuthorModel.find().exec(),
             ]);
             return {
                 data: authors,
-                total: (total === null || total === void 0 ? void 0 : total.length) || 0
+                total: (total === null || total === void 0 ? void 0 : total.length) || 0,
             };
         });
     }
     createAuthor(body) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            const link = (_a = body.fullName) === null || _a === void 0 ? void 0 : _a.split(' ').join('-').toLowerCase();
+            const link = (_a = body.fullName) === null || _a === void 0 ? void 0 : _a.split(" ").join("-").toLowerCase();
             const data = Object.assign(Object.assign({}, body), { link });
             const newAuthor = yield models_1.AuthorModel.create(data);
             if (!newAuthor) {
@@ -48,7 +52,9 @@ class AuthorsService {
     }
     updateAuthorById(_id, body) {
         return __awaiter(this, void 0, void 0, function* () {
-            const updatedAuthor = yield models_1.AuthorModel.findByIdAndUpdate({ _id }, body, { new: true }).exec();
+            const updatedAuthor = yield models_1.AuthorModel.findByIdAndUpdate({ _id }, body, {
+                new: true,
+            }).exec();
             if (!updatedAuthor) {
                 throw new Error("Author update failed!");
             }
@@ -62,6 +68,16 @@ class AuthorsService {
                 throw new Error("Author not found!");
             }
             return deletedAuthor;
+        });
+    }
+    getAuthorBooks(_id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const author = yield models_1.AuthorModel.findById(_id).exec();
+            if (!author) {
+                throw new Error("Author not found!");
+            }
+            const books = yield book_1.default.find({ author: _id }).exec();
+            return books;
         });
     }
 }

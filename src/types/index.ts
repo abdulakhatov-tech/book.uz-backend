@@ -80,3 +80,12 @@ export interface INews {
   link?: string;
   book?: any
 }
+
+export interface IReview {
+  userId: Types.ObjectId;
+  bookId: String;
+  message: string;
+  rating?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.categoriesRouting = exports.authorsRouting = exports.uploadRouting = exports.booksRouting = exports.genresRouting = exports.usersRouting = exports.authRouting = exports.newsRouting = void 0;
+exports.categoriesRouting = exports.reviewsRouting = exports.authorsRouting = exports.uploadRouting = exports.booksRouting = exports.genresRouting = exports.usersRouting = exports.authRouting = exports.newsRouting = void 0;
 var news_1 = require("./news");
 Object.defineProperty(exports, "newsRouting", { enumerable: true, get: function () { return __importDefault(news_1).default; } });
 var auth_1 = require("./auth");
@@ -18,5 +18,7 @@ var upload_1 = require("./upload");
 Object.defineProperty(exports, "uploadRouting", { enumerable: true, get: function () { return __importDefault(upload_1).default; } });
 var authors_1 = require("./authors");
 Object.defineProperty(exports, "authorsRouting", { enumerable: true, get: function () { return __importDefault(authors_1).default; } });
+var reviews_1 = require("./reviews");
+Object.defineProperty(exports, "reviewsRouting", { enumerable: true, get: function () { return __importDefault(reviews_1).default; } });
 var categories_1 = require("./categories");
 Object.defineProperty(exports, "categoriesRouting", { enumerable: true, get: function () { return __importDefault(categories_1).default; } });

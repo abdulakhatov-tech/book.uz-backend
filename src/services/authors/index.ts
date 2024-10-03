@@ -1,66 +1,81 @@
 import { AuthorModel } from "../../models";
+import BookModel from "../../models/book";
 import { IAuthor } from "../../types";
 
 class AuthorsService {
-    constructor() {}
+  constructor() {}
 
-    async getAllAuthors(page: number, limit: number) {
-        const skip = (page - 1) * limit;
-        const [authors, total] = await Promise.all([
-            AuthorModel.find().skip(skip).limit(limit).exec(),
-            AuthorModel.find().exec()
-        ]);
+  async getAllAuthors(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    const [authors, total] = await Promise.all([
+      AuthorModel.find().skip(skip).limit(limit).exec(),
+      AuthorModel.find().exec(),
+    ]);
 
-        return {
-            data: authors,    
-            total: total?.length || 0
-        };
+    return {
+      data: authors,
+      total: total?.length || 0,
+    };
+  }
+
+  async createAuthor(body: IAuthor) {
+    const link = body.fullName?.split(" ").join("-").toLowerCase();
+    const data = {
+      ...body,
+      link,
+    };
+    const newAuthor = await AuthorModel.create(data);
+
+    if (!newAuthor) {
+      throw new Error("Author creation failed!");
     }
 
-    async createAuthor(body:IAuthor) {
-        const link = body.fullName?.split(' ').join('-').toLowerCase();
-        const data = {
-            ...body,
-            link
-        }
-        const newAuthor = await AuthorModel.create(data);
+    return newAuthor;
+  }
 
-        if(!newAuthor) {
-            throw new Error("Author creation failed!");
-        }
+  async getAuthorById(_id: string) {
+    const author = await AuthorModel.findById(_id).exec();
 
-        return newAuthor;
+    if (!author) {
+      throw new Error("Author not found!");
     }
 
-    async getAuthorById(_id: string) {
-        const author = await AuthorModel.findById(_id).exec();
+    return author;
+  }
 
-        if(!author) {
-            throw new Error("Author not found!");
-        }
+  async updateAuthorById(_id: string, body: IAuthor) {
+    const updatedAuthor = await AuthorModel.findByIdAndUpdate({ _id }, body, {
+      new: true,
+    }).exec();
 
-        return author;
+    if (!updatedAuthor) {
+      throw new Error("Author update failed!");
     }
 
-    async updateAuthorById(_id: string, body: IAuthor) {
-        const updatedAuthor = await AuthorModel.findByIdAndUpdate({_id}, body, { new: true }).exec();
+    return updatedAuthor;
+  }
 
-        if(!updatedAuthor) {
-            throw new Error("Author update failed!");
-        }
+  async deleteAuthorById(_id: string) {
+    const deletedAuthor = await AuthorModel.findByIdAndDelete({ _id }).exec();
 
-        return updatedAuthor;
+    if (!deletedAuthor) {
+      throw new Error("Author not found!");
     }
 
-    async deleteAuthorById(_id: string) {
-        const deletedAuthor = await AuthorModel.findByIdAndDelete({_id}).exec();
+    return deletedAuthor;
+  }
 
-        if(!deletedAuthor) {
-            throw new Error("Author not found!");
-        }
+  async getAuthorBooks(_id: string) {
+    const author = await AuthorModel.findById(_id).exec();
 
-        return deletedAuthor;
+    if (!author) {
+      throw new Error("Author not found!");
     }
+
+    const books = await BookModel.find({ author: _id }).exec();
+
+    return books;
+  }
 }
 
 export default AuthorsService;

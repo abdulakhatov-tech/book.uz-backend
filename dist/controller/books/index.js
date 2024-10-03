@@ -32,33 +32,46 @@ const requiredFields = [
 const booksService = new services_1.BooksService();
 const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { page = 1, limit = 9, genreIds, fromPrice = 0, toPrice = 1000000, language, authorIds, sort = "createdAt", asc = -1, } = req.query;
-        const filters = {
-            genreIds,
-            fromPrice: Number(fromPrice),
-            toPrice: Number(toPrice),
-            language,
-            authorIds,
-        };
-        const data = yield booksService.getAllBooks({
-            page: Number(page),
-            limit: Number(limit),
+        const { page = "1", limit = "9", genreIds = "", fromPrice = "0", toPrice = "1000000", language = "", authorIds = "", sort = "createdAt", asc = "-1", } = req.query;
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+        const fromPriceNum = parseFloat(fromPrice);
+        const toPriceNum = parseFloat(toPrice);
+        const ascNum = parseInt(asc, 10);
+        // Construct filters, only include if defined and valid
+        const filters = {};
+        if (genreIds)
+            filters.genreIds = genreIds;
+        if (!isNaN(fromPriceNum))
+            filters.fromPrice = fromPriceNum;
+        if (!isNaN(toPriceNum))
+            filters.toPrice = toPriceNum;
+        if (language)
+            filters.language = language;
+        if (authorIds)
+            filters.authorIds = authorIds;
+        const { books, totalBooks, totalPages } = yield booksService.getAllBooks({
+            page: pageNum,
+            limit: limitNum,
             sort,
-            asc: Number(asc),
+            asc: ascNum,
             filters,
         });
-        res.status(200).json({
+        // Return a well-structured JSON response
+        return res.status(200).json({
             status: "success",
-            message: "ok",
-            data: data.books || [],
+            message: "Books fetched successfully",
+            data: books || [],
             pagination: {
-                totalBooks: data.totalBooks,
-                totalPages: data.totalPages,
-                currentPage: parseInt(page),
+                totalBooks,
+                totalPages,
+                currentPage: pageNum,
+                limit: limitNum,
             },
         });
     }
     catch (error) {
+        // Handle errors with proper context
         return (0, errors_1.apiErrorHandler)(res, error);
     }
 });

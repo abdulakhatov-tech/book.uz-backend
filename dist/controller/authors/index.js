@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAuthorById = exports.updateAuthorById = exports.getAuthorById = exports.createAuthor = exports.getAllAuthors = void 0;
+exports.getAuthorBooks = exports.deleteAuthorById = exports.updateAuthorById = exports.getAuthorById = exports.createAuthor = exports.getAllAuthors = void 0;
 const errors_1 = require("../../errors");
 const services_1 = require("../../services");
 const helpers_1 = require("../../helpers");
@@ -127,3 +127,24 @@ const deleteAuthorByIdController = (req, res) => __awaiter(void 0, void 0, void 
     }
 });
 exports.deleteAuthorById = deleteAuthorByIdController;
+const getAuthorBooksController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { authorId } = req.params;
+    if (!authorId) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'Invalid author ID'
+        });
+    }
+    try {
+        const data = yield authorsService.getAuthorBooks(authorId);
+        res.status(200).json({
+            status: 'success',
+            message: 'ok',
+            data
+        });
+    }
+    catch (error) {
+        return (0, errors_1.apiErrorHandler)(res, error);
+    }
+});
+exports.getAuthorBooks = getAuthorBooksController;

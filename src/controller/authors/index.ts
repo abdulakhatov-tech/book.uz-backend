@@ -140,10 +140,34 @@ const deleteAuthorByIdController = async(req: Request, res: Response) => {
     }
 }
 
+const getAuthorBooksController =async(req: Request, res: Response) => {
+    const { authorId } = req.params;
+    
+    if(!authorId) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'Invalid author ID'
+        });
+    }
+
+    try {
+        const data = await authorsService.getAuthorBooks(authorId);
+
+        res.status(200).json({
+            status:'success',
+            message: 'ok',
+            data
+        });
+    } catch(error) {
+        return apiErrorHandler(res, error);
+    }
+}
+
 export {
     getAllAuthorsController as getAllAuthors,
     createAuthorController as createAuthor,
     getAuthorByIdController as getAuthorById,
     updateAuthorByIdController as updateAuthorById,
-    deleteAuthorByIdController as deleteAuthorById
+    deleteAuthorByIdController as deleteAuthorById,
+    getAuthorBooksController as getAuthorBooks
 }

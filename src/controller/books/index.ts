@@ -44,7 +44,7 @@ const getAll = async (req: Request, res: Response) => {
 
     // Construct filters, only include if defined and valid
     const filters: Record<string, any> = {};
-    
+
     if (genreIds) filters.genreIds = genreIds;
     if (!isNaN(fromPriceNum)) filters.fromPrice = fromPriceNum;
     if (!isNaN(toPriceNum)) filters.toPrice = toPriceNum;
@@ -71,7 +71,6 @@ const getAll = async (req: Request, res: Response) => {
         limit: limitNum,
       },
     });
-
   } catch (error) {
     // Handle errors with proper context
     return apiErrorHandler(res, error);

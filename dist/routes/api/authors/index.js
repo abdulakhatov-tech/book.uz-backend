@@ -7,6 +7,7 @@ const verifyRole_1 = require("../../../middlewares/verifyRole");
 const router = (0, express_1.Router)();
 router.get('/', authors_1.getAllAuthors);
 router.get('/:authorId', authors_1.getAuthorById);
+router.get('/:authorId/books', authors_1.getAuthorBooks);
 router.post('/', verifyToken_1.verifyToken, (0, verifyRole_1.verifyRoles)('admin', 'owner'), authors_1.createAuthor);
 router.put('/:authorId', verifyToken_1.verifyToken, (0, verifyRole_1.verifyRoles)('admin', 'owner'), authors_1.updateAuthorById);
 router.delete('/:authorId', verifyToken_1.verifyToken, (0, verifyRole_1.verifyRoles)('admin', 'owner'), authors_1.deleteAuthorById);

@@ -1,8 +1,5 @@
 import BookModel from "../../models/book";
 
-
-
-
 class BooksService {
   constructor() {}
 
@@ -41,11 +38,11 @@ class BooksService {
     // Sorting logic
     const sortOptions: Record<string, string> = {
       createdAt: "createdAt",
-      fromPrice: 'bookPrice',
+      fromPrice: "bookPrice",
       rating: "rating",
-    }
+    };
 
-    const sortField = sortOptions[sort] || 'createdAt';
+    const sortField = sortOptions[sort] || "createdAt";
     const sortOrder = asc === 1 ? 1 : -1;
 
     const skip = (page - 1) * limit;
@@ -54,7 +51,7 @@ class BooksService {
     const totalBooks = await BookModel.countDocuments(query);
 
     // Total pages
-    const totalPages =  Math.ceil(totalBooks / limit);
+    const totalPages = Math.ceil(totalBooks / limit);
 
     // Get books with filters, pagination, and sorting
     const books = await BookModel.find(query)
@@ -67,6 +64,7 @@ class BooksService {
         select: "_id imgUrl name",
       })
       .sort({ [sortField]: sortOrder })
+      .select("-ratedBy")
       .skip(skip)
       .limit(limit)
       .exec();
@@ -74,7 +72,7 @@ class BooksService {
     return {
       books,
       totalBooks,
-      totalPages
+      totalPages,
     };
   }
 
@@ -98,6 +96,7 @@ class BooksService {
         path: "genre",
         select: "_id imgUrl name",
       })
+      .select("-ratedBy")
       .exec();
 
     if (!book) {
@@ -110,7 +109,9 @@ class BooksService {
   async updateBookById(bookId: string, book: any) {
     const updatedBook = await BookModel.findByIdAndUpdate(bookId, book, {
       new: true,
-    }).exec();
+    })
+      .select("-ratedBy")
+      .exec();
 
     if (!updatedBook) {
       throw new Error("Book update failed!");

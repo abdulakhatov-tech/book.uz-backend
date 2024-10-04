@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
 import { INews } from "../../types";
 
-const newsSchema = new Schema(
+const newsSchema = new Schema<INews>(
   {
     book: {
       type: Schema.Types.ObjectId,
@@ -30,7 +30,7 @@ const newsSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ["news", "newBook"],
+      enum: ["news", "newBook", 'discounts'],
       default: "news",
     },
     link: {
@@ -54,6 +54,6 @@ newsSchema.pre<INews>("save", function (next) {
   next();
 });
 
-const newsModel =  model('news', newsSchema);
+const newsModel =  model<INews>('news', newsSchema);
 
 export default newsModel;

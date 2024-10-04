@@ -5,20 +5,31 @@ import { IAuthor } from "../../types";
 class AuthorsService {
   constructor() {}
 
-  async getAllAuthors(page: number, limit: number) {
+  async getAllAuthors({ page, limit, search }: { page: number; limit: number, search: string }) {
     const skip = (page - 1) * limit;
-    const [authors, total] = await Promise.all([
-      AuthorModel.find().skip(skip).limit(limit).exec(),
-      AuthorModel.find().exec(),
-    ]);
+
+    const searchQuery = search ? { fullName: { $regex: search, $options: "i" } } : {}
+
+    // Total matching books count
+    const totalAuthors = await AuthorModel.countDocuments(searchQuery);
+
+    // Total pages
+    const totalPages = Math.ceil(totalAuthors / limit);
+
+    const authors = await AuthorModel.find(searchQuery)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .exec();
 
     return {
       data: authors,
-      total: total?.length || 0,
+      totalAuthors,
+      totalPages,
     };
   }
 
-  async createAuthor(body: IAuthor) {
+  async createAuthor(body: any) {
     const link = body.fullName?.split(" ").join("-").toLowerCase();
     const data = {
       ...body,
@@ -43,7 +54,7 @@ class AuthorsService {
     return author;
   }
 
-  async updateAuthorById(_id: string, body: IAuthor) {
+  async updateAuthorById(_id: string, body: any) {
     const updatedAuthor = await AuthorModel.findByIdAndUpdate({ _id }, body, {
       new: true,
     }).exec();

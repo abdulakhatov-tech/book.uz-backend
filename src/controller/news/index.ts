@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 
-import { apiErrorHandler } from "../../errors";
 import { bodyRequirer } from "../../helpers";
 import { NewsService } from "../../services";
+import { apiErrorHandler } from "../../errors";
+import { newsQuerySchema } from "../../validators/news.validation";
 
 const requiredFields = ["title", "imgUrl", "type", "content"];
 
@@ -10,12 +11,20 @@ const newsService = new NewsService();
 
 const getAll = async (req: Request, res: Response) => {
   try {
-    const data = await newsService.getAll();
+    const { page, limit, type } = newsQuerySchema.parse(req.query);
+
+    const { data, totalPages, totalNews } = await newsService.getAll({
+      page,
+      limit,
+      type,
+    });
 
     res.status(200).json({
       status: "success",
       message: "ok",
       data,
+      totalPages,
+      totalNews,
     });
   } catch (err) {
     return apiErrorHandler(res, err);

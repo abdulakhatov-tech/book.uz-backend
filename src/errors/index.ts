@@ -1,6 +1,15 @@
 import { Response } from "express";
+import { z } from "zod";
 
 export const apiErrorHandler = (res: Response, error: any) => {
+
+  if (error instanceof z.ZodError) {
+    return res.status(400).json({
+      status: "error",
+      message: error.errors.map(e => e.message).join(", "),
+    });
+  }
+
   // Default status code and message
   let statusCode = error.statusCode || 500;
   let message = error.message || "Something went wrong";

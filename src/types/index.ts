@@ -69,6 +69,7 @@ export interface IBook extends Document {
 }
 
 export interface INews {
+  
   title: string;
   content: string;
   imgUrl: string;
@@ -76,7 +77,7 @@ export interface INews {
   updatedAt: Date;
   isRead: number,
   readCount: number,
-  type: 'news' | 'newBook',
+  type: 'news' | 'newBook' | 'discounts',
   link?: string;
   book?: any
 }

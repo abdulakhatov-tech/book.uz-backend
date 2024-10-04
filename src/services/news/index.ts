@@ -3,10 +3,31 @@ import { NewsModel } from "../../models";
 class NewsService {
   constructor() {}
 
-  async getAll() {
-    const newsList = await NewsModel.find().populate("book");
+  async getAll({page, limit, type}: {page: number, limit: number; type: 'all' | 'news' | 'newBook' | 'discounts'}) {
+    const skip = (page - 1) * limit;
 
-    return newsList;
+    console.log(page, limit, type)
+
+    const query: any = {};
+
+    if (type !== 'all') {
+      query.type = type;
+    }
+
+    const totalNews = await NewsModel.countDocuments(query);
+    const totalPages = Math.ceil(totalNews / limit);
+
+    const newsList = await NewsModel.find(query)
+    .populate("book")
+    .skip(skip)
+    .limit(limit)
+    .sort({ createdAt: -1 })
+
+    return {
+      data: newsList,
+      totalNews,
+      totalPages
+    };
   }
 
   async getById(_id: string) {

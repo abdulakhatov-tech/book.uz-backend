@@ -7,3 +7,5 @@ export { default as GenresService } from './genres';
 export { default as AuthorsService } from './authors';
 export { default as ReviewsService } from './reviews';
 export { default as CategoriesService } from './categories';
+export { default as PaymentMethodsService } from './user-api/payment-methods'
+export { default as DeliveryMethodsService } from './user-api/delivery-methods'

@@ -69,7 +69,6 @@ export interface IBook extends Document {
 }
 
 export interface INews {
-  
   title: string;
   content: string;
   imgUrl: string;
@@ -87,6 +86,23 @@ export interface IReview {
   bookId: String;
   message: string;
   rating?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface DeliveryMethodI {
+  _id?: string;
+  name: string;
+  type: "courier" | "pickup" | "postal";
+  value: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface PaymentMethodI {
+  _id?: string;
+  name: string;
+  type: "payme" | "cash" | "click";
   createdAt?: Date;
   updatedAt?: Date;
 }

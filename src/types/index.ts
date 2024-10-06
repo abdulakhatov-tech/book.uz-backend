@@ -112,3 +112,9 @@ export interface RegionI {
   name: string;
   paymentTypes: ("balance" | "card" | "cash")[]
 }
+
+export interface DisrictI {
+  _id?: string;
+  name: string;
+  region: Types.ObjectId;
+}

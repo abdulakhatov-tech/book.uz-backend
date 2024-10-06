@@ -7,7 +7,7 @@ import { getAllPaymentMethods } from "../../../controller/user-api/payment-metho
 const router = Router();
 
 router.get('/regions', getAllRegions)
-router.get('/districts', getAllDistrictsRelatedToRegions)
+router.get('/districts/:regionId', getAllDistrictsRelatedToRegions)
 router.get('/delivery-methods', getAllDeliveryMethods)
 router.get('/payment-methods', getAllPaymentMethods)
 

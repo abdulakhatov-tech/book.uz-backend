@@ -12,23 +12,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAuthorBooks = exports.deleteAuthorById = exports.updateAuthorById = exports.getAuthorById = exports.createAuthor = exports.getAllAuthors = void 0;
 const errors_1 = require("../../errors");
 const services_1 = require("../../services");
-const helpers_1 = require("../../helpers");
+const authors_validation_1 = require("../../validators/authors.validation");
 const authorsService = new services_1.AuthorsService();
-const requiredFields = ['fullName', 'biography'];
 const getAllAuthorsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { page = 1, limit = 20 } = req.query;
-    // Convert page and limit to numbers and validate them
-    const pageNumber = parseInt(page, 10);
-    const limitNumber = parseInt(limit, 10);
-    if (isNaN(pageNumber) || pageNumber < 1 || isNaN(limitNumber) || limitNumber < 1) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Invalid pagination parameters'
-        });
-    }
     try {
-        const data = yield authorsService.getAllAuthors(pageNumber, limitNumber);
-        res.status(200).json(Object.assign({ status: 'success', message: 'ok' }, data));
+        const { page, limit, search } = authors_validation_1.authorPaginationQuerySchema.parse(req.query);
+        const data = yield authorsService.getAllAuthors({
+            page,
+            limit,
+            search: String(search)
+        });
+        res.status(200).json(Object.assign({ status: "success", message: "ok" }, data));
     }
     catch (error) {
         return (0, errors_1.apiErrorHandler)(res, error);
@@ -36,20 +30,13 @@ const getAllAuthorsController = (req, res) => __awaiter(void 0, void 0, void 0, 
 });
 exports.getAllAuthors = getAllAuthorsController;
 const createAuthorController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const body = req.body;
-    const missingFields = yield (0, helpers_1.bodyRequirer)({ body, requiredFields });
-    if (missingFields) {
-        return res.status(400).json({
-            status: 'error',
-            message: missingFields
-        });
-    }
     try {
+        const body = authors_validation_1.createAuthorSchema.parse(req.body);
         const data = yield authorsService.createAuthor(body);
         res.status(201).json({
-            status: 'success',
-            message: 'ok',
-            data
+            status: "success",
+            message: "ok",
+            data,
         });
     }
     catch (error) {
@@ -58,19 +45,13 @@ const createAuthorController = (req, res) => __awaiter(void 0, void 0, void 0, f
 });
 exports.createAuthor = createAuthorController;
 const getAuthorByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { authorId } = req.params;
-    if (!authorId) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Invalid author ID'
-        });
-    }
     try {
+        const { authorId } = authors_validation_1.authorIdSchema.parse(req.params);
         const data = yield authorsService.getAuthorById(authorId);
         res.status(200).json({
-            status: 'success',
-            message: 'ok',
-            data
+            status: "success",
+            message: "ok",
+            data,
         });
     }
     catch (error) {
@@ -79,27 +60,14 @@ const getAuthorByIdController = (req, res) => __awaiter(void 0, void 0, void 0, 
 });
 exports.getAuthorById = getAuthorByIdController;
 const updateAuthorByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { authorId } = req.params;
-    const body = req.body;
-    if (!authorId) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Invalid author ID'
-        });
-    }
-    const missingFields = yield (0, helpers_1.bodyRequirer)({ body, requiredFields });
-    if (missingFields) {
-        return res.status(400).json({
-            status: 'error',
-            message: missingFields
-        });
-    }
     try {
+        const { authorId } = authors_validation_1.authorIdSchema.parse(req.params);
+        const body = authors_validation_1.updateAuthorSchema.parse(req.body);
         const data = yield authorsService.updateAuthorById(authorId, body);
         res.status(200).json({
-            status: 'success',
-            message: 'ok',
-            data
+            status: "success",
+            message: "ok",
+            data,
         });
     }
     catch (error) {
@@ -108,18 +76,12 @@ const updateAuthorByIdController = (req, res) => __awaiter(void 0, void 0, void 
 });
 exports.updateAuthorById = updateAuthorByIdController;
 const deleteAuthorByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { authorId } = req.params;
-    if (!authorId) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Invalid author ID'
-        });
-    }
     try {
+        const { authorId } = authors_validation_1.authorIdSchema.parse(req.params);
         yield authorsService.deleteAuthorById(authorId);
         res.status(204).json({
-            status: 'success',
-            message: 'ok'
+            status: "success",
+            message: "ok",
         });
     }
     catch (error) {
@@ -128,19 +90,13 @@ const deleteAuthorByIdController = (req, res) => __awaiter(void 0, void 0, void 
 });
 exports.deleteAuthorById = deleteAuthorByIdController;
 const getAuthorBooksController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { authorId } = req.params;
-    if (!authorId) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Invalid author ID'
-        });
-    }
     try {
+        const { authorId } = authors_validation_1.authorIdSchema.parse(req.params);
         const data = yield authorsService.getAuthorBooks(authorId);
         res.status(200).json({
-            status: 'success',
-            message: 'ok',
-            data
+            status: "success",
+            message: "ok",
+            data,
         });
     }
     catch (error) {

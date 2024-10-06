@@ -10,18 +10,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteById = exports.updateById = exports.getById = exports.getAll = exports.create = void 0;
-const errors_1 = require("../../errors");
 const helpers_1 = require("../../helpers");
 const services_1 = require("../../services");
+const errors_1 = require("../../errors");
+const news_validation_1 = require("../../validators/news.validation");
 const requiredFields = ["title", "imgUrl", "type", "content"];
 const newsService = new services_1.NewsService();
 const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield newsService.getAll();
+        const { page, limit, type } = news_validation_1.newsQuerySchema.parse(req.query);
+        const { data, totalPages, totalNews } = yield newsService.getAll({
+            page,
+            limit,
+            type,
+        });
         res.status(200).json({
             status: "success",
             message: "ok",
             data,
+            totalPages,
+            totalNews,
         });
     }
     catch (err) {

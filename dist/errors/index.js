@@ -1,7 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.apiErrorHandler = void 0;
+const zod_1 = require("zod");
 const apiErrorHandler = (res, error) => {
+    if (error instanceof zod_1.z.ZodError) {
+        return res.status(400).json({
+            status: "error",
+            message: error.errors.map(e => e.message).join(", "),
+        });
+    }
     // Default status code and message
     let statusCode = error.statusCode || 500;
     let message = error.message || "Something went wrong";

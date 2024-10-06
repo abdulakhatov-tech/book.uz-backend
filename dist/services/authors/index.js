@@ -16,16 +16,23 @@ const models_1 = require("../../models");
 const book_1 = __importDefault(require("../../models/book"));
 class AuthorsService {
     constructor() { }
-    getAllAuthors(page, limit) {
-        return __awaiter(this, void 0, void 0, function* () {
+    getAllAuthors(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ page, limit, search }) {
             const skip = (page - 1) * limit;
-            const [authors, total] = yield Promise.all([
-                models_1.AuthorModel.find().skip(skip).limit(limit).exec(),
-                models_1.AuthorModel.find().exec(),
-            ]);
+            const searchQuery = search ? { fullName: { $regex: search, $options: "i" } } : {};
+            // Total matching books count
+            const totalAuthors = yield models_1.AuthorModel.countDocuments(searchQuery);
+            // Total pages
+            const totalPages = Math.ceil(totalAuthors / limit);
+            const authors = yield models_1.AuthorModel.find(searchQuery)
+                .skip(skip)
+                .limit(limit)
+                .sort({ createdAt: -1 })
+                .exec();
             return {
                 data: authors,
-                total: (total === null || total === void 0 ? void 0 : total.length) || 0,
+                totalAuthors,
+                totalPages,
             };
         });
     }

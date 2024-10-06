@@ -29,7 +29,7 @@ const newsSchema = new mongoose_1.Schema({
     },
     type: {
         type: String,
-        enum: ["news", "newBook"],
+        enum: ["news", "newBook", 'discounts'],
         default: "news",
     },
     link: {

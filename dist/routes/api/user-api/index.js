@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const regions_1 = require("../../../controller/user-api/regions");
+const delivery_methods_1 = require("../../../controller/user-api/delivery-methods");
+const districts_1 = require("../../../controller/user-api/districts");
+const payment_methods_1 = require("../../../controller/user-api/payment-methods");
+const router = (0, express_1.Router)();
+router.get('/regions', regions_1.getAllRegions);
+router.get('/districts/:regionId', districts_1.getAllDistrictsRelatedToRegions);
+router.get('/delivery-methods', delivery_methods_1.getAllDeliveryMethods);
+router.get('/payment-methods', payment_methods_1.getAllPaymentMethods);
+exports.default = router;

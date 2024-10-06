@@ -12,10 +12,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("../../models");
 class NewsService {
     constructor() { }
-    getAll() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const newsList = yield models_1.NewsModel.find().populate("book");
-            return newsList;
+    getAll(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ page, limit, type }) {
+            const skip = (page - 1) * limit;
+            console.log(page, limit, type);
+            const query = {};
+            if (type !== 'all') {
+                query.type = type;
+            }
+            const totalNews = yield models_1.NewsModel.countDocuments(query);
+            const totalPages = Math.ceil(totalNews / limit);
+            const newsList = yield models_1.NewsModel.find(query)
+                .populate("book")
+                .skip(skip)
+                .limit(limit)
+                .sort({ createdAt: -1 });
+            return {
+                data: newsList,
+                totalNews,
+                totalPages
+            };
         });
     }
     getById(_id) {

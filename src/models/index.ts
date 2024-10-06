@@ -4,3 +4,4 @@ export { default as AuthorModel } from './author';
 export { default as NewsModel } from './news';
 export { default as DeliveryMethodModel } from './user-api/delivery-method'
 export { default as PaymentMethodModel } from './user-api/payment-method'
+export { default as RegionModel } from './user-api/region'

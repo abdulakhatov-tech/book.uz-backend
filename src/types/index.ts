@@ -106,3 +106,9 @@ export interface PaymentMethodI {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface RegionI {
+  _id?: string;
+  name: string;
+  paymentTypes: ("balance" | "card" | "cash")[]
+}

@@ -118,3 +118,10 @@ export interface DisrictI {
   name: string;
   region: Types.ObjectId;
 }
+
+export interface PromocodeI {
+  _id?: string;
+  code: string;
+  discount: number;
+  isActive: boolean;
+}

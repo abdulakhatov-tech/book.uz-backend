@@ -1,13 +1,42 @@
 import { Request, Response } from "express";
-import { apiErrorHandler } from "../../errors";
+
+import {
+  UpdateUserBodyValidator,
+  UserIdValidator,
+} from "../../validators/users";
+import { IUser } from "../../types";
 import { UsersService } from "../../services";
+import { apiErrorHandler } from "../../errors";
+import { PaginationQueryValidator } from "../../validators/pagination";
 
-const usersService = new UsersService();
-
-// user
-const getAllUsersController = async (req: Request, res: Response) => {
+// get all users
+const getAll = async (req: Request, res: Response) => {
   try {
-    const data = await usersService.getAllUsers();
+    const { page, limit, search } = PaginationQueryValidator.parse(req.query);
+
+    const data = await UsersService.getAllUsers({
+      page,
+      limit,
+      search: String(search)
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "ok",
+      ...data,
+    });
+  } catch (error) {
+    return apiErrorHandler(res, error);
+  }
+};
+
+// get user by id
+const getById = async (req: Request, res: Response) => {
+  try {
+    // Validate userId in req.params
+    const { userId } = UserIdValidator.parse(req.params);
+
+    const data = await UsersService.getUserById(userId);
 
     res.status(200).json({
       status: "success",
@@ -19,18 +48,34 @@ const getAllUsersController = async (req: Request, res: Response) => {
   }
 };
 
-const getUserByIdController = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-
-  if (!userId) {
-    res.status(400).json({
-      status: "error",
-      message: "Invalid user ID",
-    });
-  }
-
+// delete user by id
+const deleteById = async (req: Request, res: Response) => {
   try {
-    const data = await usersService.getUserById(userId);
+    // Validate userId in req.params
+    const { userId } = UserIdValidator.parse(req.params);
+
+    await UsersService.deleteUserById(userId);
+
+    res.status(200).json({
+      status: "success",
+      message: "ok",
+    });
+  } catch (error) {
+    return apiErrorHandler(res, error);
+  }
+};
+
+// update user by id
+const updateById = async (req: Request, res: Response) => {
+  try {
+    // Validate userId and body in req
+    const { userId } = UserIdValidator.parse(req.params);
+    const body = UpdateUserBodyValidator.parse(req.body);
+
+    const data = await UsersService.updateUserById(
+      userId,
+      body as Partial<IUser>
+    );
 
     res.status(200).json({
       status: "success",
@@ -41,68 +86,14 @@ const getUserByIdController = async (req: Request, res: Response) => {
     return apiErrorHandler(res, error);
   }
 };
-
-const deleteUserByIdController = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-
-  if (!userId) {
-    res.status(400).json({
-      status: "error",
-      message: "Invalid user ID",
-    });
-  }
-
-  try {
-    const data = await usersService.deleteUserById(userId);
-
-    res.status(200).json({
-      status: "success",
-      message: "ok",
-      data,
-    });
-  } catch (error) {
-    return apiErrorHandler(res, error);
-  }
-};
-
-const updateUserByIdController = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-  const body = req.body;
-
-  if (!userId) {
-    res.status(400).json({
-      status: "error",
-      message: "Invalid user ID",
-    });
-  }
-
-  try {
-    const data = await usersService.updateUserById(userId, body);
-
-    res.status(200).json({
-      status: "success",
-      message: "ok",
-      data,
-    });
-  } catch (error) {
-    return apiErrorHandler(res, error);
-  }
-
-}
 
 // user promotion
-const promoteUserToAdminController = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-
-  if (!userId) {
-    res.status(400).json({
-      status: "error",
-      message: "Invalid user ID",
-    });
-  }
-
+const promoteUserToAdmin = async (req: Request, res: Response) => {
   try {
-    const data = await usersService.promoteUserToAdmin(userId);
+    // Validate userId in req.params
+    const { userId } = UserIdValidator.parse(req.params);
+
+    const data = await UsersService.promoteUserToAdmin(userId);
 
     res.status(200).json({
       status: "success",
@@ -114,36 +105,29 @@ const promoteUserToAdminController = async (req: Request, res: Response) => {
   }
 };
 
-const demoteAdminToUserController = async (req: Request, res: Response) => {
-    const { userId } = req.params;
+// admin demotion
+const demoteAdminToUser = async (req: Request, res: Response) => {
+  try {
+    // Validate userId in req.params
+    const { userId } = UserIdValidator.parse(req.params);
 
-    if (!userId) {
-      res.status(400).json({
-        status: "error",
-        message: "Invalid user ID",
-      });
-    }
+    const data = await UsersService.demoteAdminToUser(userId);
 
-    try {
-      const data = await usersService.demoteAdminToUser(userId);
-
-      res.status(200).json({
-        status: "success",
-        message: "ok",
-        data,
-      });
-    } catch (error) {
-        return apiErrorHandler(res, error);
-    }
+    res.status(200).json({
+      status: "success",
+      message: "ok",
+      data,
+    });
+  } catch (error) {
+    return apiErrorHandler(res, error);
+  }
 };
 
-
-
 export {
-  getUserByIdController as getUserByI,
-  getAllUsersController as getAllUsers,
-  deleteUserByIdController as deleteUserById,
-  updateUserByIdController as updateUserById,
-  promoteUserToAdminController as promoteUserToAdmin,
-  demoteAdminToUserController as demoteAdminToUser
+  getAll,
+  getById,
+  deleteById,
+  updateById,
+  demoteAdminToUser,
+  promoteUserToAdmin,
 };

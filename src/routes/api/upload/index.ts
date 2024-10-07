@@ -1,10 +1,10 @@
-import multer from "multer";
 import path from "path";
-import { v4 as uuidv4 } from "uuid";
+import multer from "multer";
 import { Router } from "express";
-import { verifyToken } from "../../../middlewares/verifyToken";
-import { verifyRoles } from "../../../middlewares/verifyRole";
+import { v4 as uuidv4 } from "uuid";
+
 import { uploadImage } from "../../../controller/upload";
+import { verifyToken } from "../../../middlewares/verifyToken";
 
 const router = Router();
 
@@ -24,7 +24,6 @@ const upload = multer({
 router.post(
   "/",
   verifyToken,
-  verifyRoles("admin", "owner"),
   upload.single("image"),
   uploadImage
 );

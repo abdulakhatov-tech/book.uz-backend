@@ -1,26 +1,18 @@
 import { Request, Response } from "express";
+
+import { createToken } from "../../../helpers";
 import { AuthService } from "../../../services";
-import { bodyRequirer, createToken } from "../../../helpers";
+import { apiErrorHandler } from "../../../errors";
+import { OTPVerificationValidator } from "../../../validators/auth";
 
-const authService = new AuthService();
 
-export const requiredFields = ["phoneNumber", "otpCode"];
-
-const verifyOTPController = async (req: Request, res: Response) => {
+const verifyOTP = async (req: Request, res: Response) => {
   try {
-    const body = req.body;
-
-    // Check for missing fields
-    const missingFields = await bodyRequirer({ body, requiredFields });
-    if (missingFields) {
-      return res.status(400).json({
-        status: "error",
-        message: `Missing fields: ${missingFields}`,
-      });
-    }
+    // Validate and parse the request body
+    const body = OTPVerificationValidator.parse(req.body);
 
     // Verify OTP
-    const user = await authService.verifyOTP(body);
+    const user = await AuthService.verifyOTP(body);
 
     // Create JWT token for the user
     const token = await createToken(user);
@@ -34,13 +26,9 @@ const verifyOTPController = async (req: Request, res: Response) => {
         user,
       },
     });
-  } catch (error: any) {
-    // Handle any errors
-    return res.status(400).json({
-      status: "error",
-      message: error.message || "An error occurred during OTP verification",
-    });
+  } catch (error) {
+    return apiErrorHandler(res, error);
   }
 };
 
-export default verifyOTPController;
+export default verifyOTP;

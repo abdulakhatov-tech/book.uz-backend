@@ -1,26 +1,37 @@
-import { Document, Types } from "mongoose";
-
-export interface IBodyRequirerParams {
-  body: Record<string, any>;
-  requiredFields: string[];
-}
+import { Document, Schema, Types } from "mongoose";
 
 export interface IUser extends Document {
   name: string;
   surname: string;
   phoneNumber: string;
   profilePhoto: string;
+  email: string;
+  bio: string;
   balance: number;
   frozenBalance: number;
   lastEnteredAt: Date;
   signInAttempts: number;
+  role: 'user' | 'admin' | 'owner',
+  orders: Array<Schema.Types.ObjectId>;
+  books: Array<Schema.Types.ObjectId>;
+  wishlist: Array<Schema.Types.ObjectId>;
+  billingAddress: {
+    region: Types.ObjectId | null;
+    district: Types.ObjectId | null;
+    details: string;
+  };
   createdAt?: Date;
   updatedAt?: Date;
-  role: 'user' | 'admin' | 'owner',
-  orders: any[];
-  wishlist: any[];
-  products: any[];
 }
+
+// =================================================================
+
+export interface IBodyRequirerParams {
+  body: Record<string, any>;
+  requiredFields: string[];
+}
+
+
 
 export interface IGenre {
   _id?: string;

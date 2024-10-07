@@ -34,6 +34,10 @@ class UserService {
 
     if (authType === "sign-in") {
       if (existingUser) {
+        existingUser.lastEnteredAt = new Date();
+        existingUser.signInAttempts++;
+        await existingUser.save();
+
         return existingUser;
       }
     }
@@ -59,8 +63,12 @@ class UserService {
       role,
     });
 
+    newUser.lastEnteredAt = new Date();
+    newUser.signInAttempts++;
+    await newUser.save();
+
     return newUser;
   }
 }
 
-export default UserService;
+export default new UserService;

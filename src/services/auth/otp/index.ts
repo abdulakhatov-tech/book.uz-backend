@@ -1,8 +1,8 @@
 interface IOtpStore {
+  name?: string;
     otpCode: number;
-    expiresAt: number;
-    name?: string;
     surname?: string;
+    expiresAt: number;
   }
   
   class OTPService {
@@ -11,7 +11,7 @@ interface IOtpStore {
   
     constructor() {
       this.otpStore = new Map();
-      this.otpValidity = 1/2 * 60 * 1000; // 2 minutes
+      this.otpValidity = 1 * 60 * 1000; // 1 minute
     }
   
     generateOTP() {
@@ -68,4 +68,4 @@ interface IOtpStore {
     }
   }
   
-  export default OTPService;
+  export default new OTPService;

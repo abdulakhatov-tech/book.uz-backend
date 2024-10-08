@@ -8,9 +8,13 @@ class BooksService {
 
     // Genre filter
     if (filters.genreIds) {
-      query.genre = Array.isArray(filters.genreIds)
-        ? { $in: filters.genreIds }
-        : filters.genreIds;
+      if (filters.genreIds.includes("all")) {
+        // Do not filter by genre if "all-genres" is selected
+      } else {
+        query.genre = Array.isArray(filters.genreIds)
+          ? { $in: filters.genreIds }
+          : filters.genreIds;
+      }
     }
 
     // Price Range filter
@@ -21,18 +25,24 @@ class BooksService {
       };
     }
 
-    // Language filter
     if (filters.language) {
-      query.language = Array.isArray(filters.language)
-        ? { $in: filters.language }
-        : filters.language;
+      if (filters.language.includes("all")) {
+        // Do not filter by genre if "all-genres" is selected
+      } else {
+        query.language = Array.isArray(filters.language)
+          ? { $in: filters.language }
+          : filters.language;
+      }
     }
 
-    // Author filter
     if (filters.authorIds) {
-      query.author = Array.isArray(filters.authorIds)
+      if (filters.authorIds.includes("all")) {
+        // Do not filter by genre if "all-genres" is selected
+      } else {
+        query.author = Array.isArray(filters.authorIds)
         ? { $in: filters.authorIds }
         : filters.authorIds;
+      }
     }
 
     // Sorting logic

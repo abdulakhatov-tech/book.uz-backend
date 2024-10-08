@@ -9,3 +9,4 @@ export { default as authorsRouting } from './authors';
 export { default as reviewsRouting } from './reviews';
 export { default as userApiRouting } from './user-api'
 export { default as categoriesRouting } from './categories';
+export { default as statisticsRouting } from './statistics';

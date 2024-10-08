@@ -4,9 +4,10 @@ export { default as UsersService } from './users';
 export { default as BooksService } from './books';
 export { default as OTPService } from './auth/otp';
 export { default as GenresService } from './genres';
-export { default as AuthorsService } from './authors';
-export { default as ReviewsService } from './reviews';
 export { default as BannersService } from './banners'
+export { default as ReviewsService } from './reviews';
+export { default as AuthorsService } from './authors';
+export { default as StatisticsService } from './statistics';
 export { default as CategoriesService } from './categories';
 export { default as RegionsService } from './user-api/regions'
 export { default as DistrictsService } from './user-api/districts'

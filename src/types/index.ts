@@ -39,6 +39,15 @@ export interface IBanner {
   updatedAt?: Date;
 }
 
+export interface IStatistics {
+  _id?: string;
+  totalBooks: number;
+  totalNamedBook: number;
+  totalBranches: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 // =================================================================
 
 export interface IBodyRequirerParams {

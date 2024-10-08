@@ -1,5 +1,11 @@
 import { Document, Schema, Types } from "mongoose";
 
+export interface IPagination {
+  page: number;
+  limit: number;
+  search?: string;
+}
+
 export interface IUser extends Document {
   name: string;
   surname: string;
@@ -20,6 +26,15 @@ export interface IUser extends Document {
     district: Types.ObjectId | null;
     details: string;
   };
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IBanner {
+  _id?: string;
+  title: string;
+  link: string;
+  imgUrl: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

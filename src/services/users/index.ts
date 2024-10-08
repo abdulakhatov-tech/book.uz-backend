@@ -1,5 +1,5 @@
-import { IUser } from "../../types";
 import { UserModel } from "../../models";
+import { IPagination, IUser } from "../../types";
 
 class UsersService {
   constructor() {}
@@ -8,11 +8,7 @@ class UsersService {
     page,
     limit,
     search,
-  }: {
-    page: number;
-    limit: number;
-    search: string;
-  }) {
+  }: IPagination) {
     const skip = (page - 1) * limit;
 
     const searchQuery = search

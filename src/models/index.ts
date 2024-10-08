@@ -1,6 +1,7 @@
 export { default as NewsModel } from './news';
 export { default as UserModel } from './user';
 export { default as GenreModel } from './genre';
+export { default as BannerModel } from './banner';
 export { default as AuthorModel } from './author';
 export { default as RegionModel } from './user-api/region'
 export { default as DistrictModel } from './user-api/district'

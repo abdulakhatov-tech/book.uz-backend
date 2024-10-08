@@ -8,6 +8,7 @@ import {
   uploadRouting,
   authorsRouting,
   userApiRouting,
+  bannersRouting,
   reviewsRouting,
   categoriesRouting,
 } from "./api";
@@ -22,6 +23,7 @@ router.use("/genres", genresRouting);
 router.use("/upload", uploadRouting);
 router.use("/authors", authorsRouting);
 router.use("/reviews", reviewsRouting);
+router.use("/banners", bannersRouting);
 router.use("/user-api", userApiRouting);
 router.use("/category", categoriesRouting);
 

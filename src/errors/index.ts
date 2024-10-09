@@ -4,9 +4,15 @@ import { z } from "zod";
 export const apiErrorHandler = (res: Response, error: any) => {
 
   if (error instanceof z.ZodError) {
+    const zodErrors = error.errors.map((err) => ({
+      path: err.path.join('.'), // Join the path array to make it readable (e.g., 'user.name')
+      message: err.message,
+    }));
+
     return res.status(400).json({
       status: "error",
-      message: error.errors.map(e => e.message).join(", "),
+      message: "Validation error",
+      errors: zodErrors, // Return detailed field-specific errors
     });
   }
 

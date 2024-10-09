@@ -3,6 +3,7 @@ export { default as AuthService } from './auth';
 export { default as UsersService } from './users';
 export { default as BooksService } from './books';
 export { default as OTPService } from './auth/otp';
+export { default as OrdersService } from './orders'
 export { default as GenresService } from './genres';
 export { default as BannersService } from './banners'
 export { default as ReviewsService } from './reviews';

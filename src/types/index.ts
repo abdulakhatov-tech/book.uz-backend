@@ -48,6 +48,28 @@ export interface IStatistics {
   updatedAt?: Date;
 }
 
+export interface BookOrder {
+  book: string; // or Schema.Types.ObjectId, if you want to enforce ObjectId type
+  quantity: number;
+}
+
+export interface Address {
+  region: string; // or Schema.Types.ObjectId if you want to enforce ObjectId type
+  district: string; // or Schema.Types.ObjectId if you want to enforce ObjectId type
+  extraAddress: string;
+}
+
+export interface Order extends Document {
+  user: string; // or Schema.Types.ObjectId if you want to enforce ObjectId type
+  books: BookOrder[];
+  deliveryMethod: 'courier' | 'pickup' | 'postal';
+  paymentMethod: 'payme' | 'click' | 'cash';
+  address: Address;
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  createdAt?: Date; // Optional, if you are using timestamps
+  updatedAt?: Date; // Optional, if you are using timestamps
+}
+
 // =================================================================
 
 export interface IBodyRequirerParams {

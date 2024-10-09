@@ -5,6 +5,7 @@ import {
   booksRouting,
   usersRouting,
   genresRouting,
+  ordersRouting,
   uploadRouting,
   authorsRouting,
   userApiRouting,
@@ -21,6 +22,7 @@ router.use("/news", newsRouting);
 router.use("/users", usersRouting);
 router.use("/books", booksRouting);
 router.use("/genres", genresRouting);
+router.use('/orders', ordersRouting);
 router.use("/upload", uploadRouting);
 router.use("/authors", authorsRouting);
 router.use("/reviews", reviewsRouting);

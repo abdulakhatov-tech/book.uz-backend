@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { bodyRequirer } from "../../helpers";
 import { apiErrorHandler } from "../../errors";
-import { ReviewsService } from "../../services";
+import { BooksService, ReviewsService } from "../../services";
 
 const requiredFields = ["userId", "message"];
 
@@ -110,3 +110,4 @@ export const deleteById = async(req: Request, res: Response) => {
         return apiErrorHandler(res, error);
       }
 };
+

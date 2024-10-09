@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class OTPService {
     constructor() {
         this.otpStore = new Map();
-        this.otpValidity = 1 / 2 * 60 * 1000; // 2 minutes
+        this.otpValidity = 1 * 60 * 1000; // 1 minute
     }
     generateOTP() {
         return Math.floor(100000 + Math.random() * 900000); // Generates a random 6-digit number
@@ -39,4 +39,4 @@ class OTPService {
         };
     }
 }
-exports.default = OTPService;
+exports.default = new OTPService;

@@ -9,33 +9,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const helpers_1 = require("../../../helpers");
 const errors_1 = require("../../../errors");
 const services_1 = require("../../../services");
-// services
-const authService = new services_1.AuthService();
-const otpService = new services_1.OTPService();
-// Defining the required fields for the sign-in request
-const requiredFields = ["phoneNumber"];
-const signInController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const body = req.body;
-    // Checking for missing required fields using the bodyRequirer helper
-    const missingFields = yield (0, helpers_1.bodyRequirer)({ body, requiredFields });
-    // If there are missing fields, respond with a 400 error
-    if (missingFields) {
-        return res.status(400).json({
-            status: "error",
-            message: missingFields,
-        });
-    }
+const auth_1 = require("../../../validators/auth");
+const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Calling the signIn method from AuthService to handle the authentication process
-        const otpCode = yield authService.signIn(body);
+        // Validate and parse the request body
+        const body = auth_1.PhoneNumberValidator.parse(req.body);
+        // Validate and sign in the user using the provided phone number
+        const otpCode = yield services_1.AuthService.signIn(body);
         res.status(200).json({
             status: "success",
             message: "ok",
             extraMessage: "Verification code sent successfully",
-            activeOtpTime: otpService.otpValidity,
+            activeOtpTime: services_1.OTPService.otpValidity,
             otpCode,
         });
     }
@@ -43,4 +30,4 @@ const signInController = (req, res) => __awaiter(void 0, void 0, void 0, functio
         return (0, errors_1.apiErrorHandler)(res, error);
     }
 });
-exports.default = signInController;
+exports.default = signIn;

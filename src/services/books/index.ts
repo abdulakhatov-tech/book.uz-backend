@@ -1,3 +1,4 @@
+import { UserModel } from "../../models";
 import BookModel from "../../models/book";
 
 class BooksService {
@@ -40,8 +41,8 @@ class BooksService {
         // Do not filter by genre if "all-genres" is selected
       } else {
         query.author = Array.isArray(filters.authorIds)
-        ? { $in: filters.authorIds }
-        : filters.authorIds;
+          ? { $in: filters.authorIds }
+          : filters.authorIds;
       }
     }
 

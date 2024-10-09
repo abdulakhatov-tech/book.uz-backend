@@ -12,13 +12,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = require("../../models");
 class UsersService {
     constructor() { }
-    getAllUsers() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const users = yield models_1.UserModel.find().exec();
-            if (!users.length) {
-                throw new Error("No users found!");
-            }
-            return users;
+    getAllUsers(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ page, limit, search, }) {
+            const skip = (page - 1) * limit;
+            const searchQuery = search
+                ? { name: { $regex: search, $options: "i" } }
+                : {};
+            // Total matching users count
+            const totalUsers = yield models_1.UserModel.countDocuments(searchQuery);
+            // Total pages
+            const totalPages = Math.ceil(totalUsers / limit);
+            const users = yield models_1.UserModel.find()
+                .skip(skip)
+                .limit(limit)
+                .sort({ createdAt: -1 })
+                .exec();
+            return {
+                data: users,
+                totalUsers,
+                totalPages,
+            };
         });
     }
     getUserById(_id) {
@@ -68,7 +81,7 @@ class UsersService {
             if (!user) {
                 throw new Error("User not found");
             }
-            if (user.role === 'user') {
+            if (user.role === "user") {
                 throw new Error("User is already a regular user.");
             }
             user.role = "user";
@@ -77,4 +90,4 @@ class UsersService {
         });
     }
 }
-exports.default = UsersService;
+exports.default = new UsersService();

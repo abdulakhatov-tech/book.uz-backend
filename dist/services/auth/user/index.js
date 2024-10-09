@@ -35,6 +35,9 @@ class UserService {
             const existingUser = yield this.UserModel.findOne({ phoneNumber });
             if (authType === "sign-in") {
                 if (existingUser) {
+                    existingUser.lastEnteredAt = new Date();
+                    existingUser.signInAttempts++;
+                    yield existingUser.save();
                     return existingUser;
                 }
             }
@@ -54,8 +57,11 @@ class UserService {
                 phoneNumber,
                 role,
             });
+            newUser.lastEnteredAt = new Date();
+            newUser.signInAttempts++;
+            yield newUser.save();
             return newUser;
         });
     }
 }
-exports.default = UserService;
+exports.default = new UserService;

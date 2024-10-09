@@ -9,14 +9,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.demoteAdminToUser = exports.promoteUserToAdmin = exports.updateUserById = exports.deleteUserById = exports.getAllUsers = exports.getUserByI = void 0;
-const errors_1 = require("../../errors");
+exports.promoteUserToAdmin = exports.demoteAdminToUser = exports.updateById = exports.deleteById = exports.getById = exports.getAll = void 0;
+const users_1 = require("../../validators/users");
 const services_1 = require("../../services");
-const usersService = new services_1.UsersService();
-// user
-const getAllUsersController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const errors_1 = require("../../errors");
+const pagination_1 = require("../../validators/pagination");
+// get all users
+const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield usersService.getAllUsers();
+        const { page, limit, search } = pagination_1.PaginationQueryValidator.parse(req.query);
+        const data = yield services_1.UsersService.getAllUsers({
+            page,
+            limit,
+            search: String(search)
+        });
+        res.status(200).json(Object.assign({ status: "success", message: "ok" }, data));
+    }
+    catch (error) {
+        return (0, errors_1.apiErrorHandler)(res, error);
+    }
+});
+exports.getAll = getAll;
+// get user by id
+const getById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Validate userId in req.params
+        const { userId } = users_1.UserIdValidator.parse(req.params);
+        const data = yield services_1.UsersService.getUserById(userId);
         res.status(200).json({
             status: "success",
             message: "ok",
@@ -27,17 +46,30 @@ const getAllUsersController = (req, res) => __awaiter(void 0, void 0, void 0, fu
         return (0, errors_1.apiErrorHandler)(res, error);
     }
 });
-exports.getAllUsers = getAllUsersController;
-const getUserByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = req.params;
-    if (!userId) {
-        res.status(400).json({
-            status: "error",
-            message: "Invalid user ID",
+exports.getById = getById;
+// delete user by id
+const deleteById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Validate userId in req.params
+        const { userId } = users_1.UserIdValidator.parse(req.params);
+        yield services_1.UsersService.deleteUserById(userId);
+        res.status(200).json({
+            status: "success",
+            message: "ok",
         });
     }
+    catch (error) {
+        return (0, errors_1.apiErrorHandler)(res, error);
+    }
+});
+exports.deleteById = deleteById;
+// update user by id
+const updateById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield usersService.getUserById(userId);
+        // Validate userId and body in req
+        const { userId } = users_1.UserIdValidator.parse(req.params);
+        const body = users_1.UpdateUserBodyValidator.parse(req.body);
+        const data = yield services_1.UsersService.updateUserById(userId, body);
         res.status(200).json({
             status: "success",
             message: "ok",
@@ -48,61 +80,13 @@ const getUserByIdController = (req, res) => __awaiter(void 0, void 0, void 0, fu
         return (0, errors_1.apiErrorHandler)(res, error);
     }
 });
-exports.getUserByI = getUserByIdController;
-const deleteUserByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = req.params;
-    if (!userId) {
-        res.status(400).json({
-            status: "error",
-            message: "Invalid user ID",
-        });
-    }
-    try {
-        const data = yield usersService.deleteUserById(userId);
-        res.status(200).json({
-            status: "success",
-            message: "ok",
-            data,
-        });
-    }
-    catch (error) {
-        return (0, errors_1.apiErrorHandler)(res, error);
-    }
-});
-exports.deleteUserById = deleteUserByIdController;
-const updateUserByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = req.params;
-    const body = req.body;
-    if (!userId) {
-        res.status(400).json({
-            status: "error",
-            message: "Invalid user ID",
-        });
-    }
-    try {
-        const data = yield usersService.updateUserById(userId, body);
-        res.status(200).json({
-            status: "success",
-            message: "ok",
-            data,
-        });
-    }
-    catch (error) {
-        return (0, errors_1.apiErrorHandler)(res, error);
-    }
-});
-exports.updateUserById = updateUserByIdController;
+exports.updateById = updateById;
 // user promotion
-const promoteUserToAdminController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = req.params;
-    if (!userId) {
-        res.status(400).json({
-            status: "error",
-            message: "Invalid user ID",
-        });
-    }
+const promoteUserToAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield usersService.promoteUserToAdmin(userId);
+        // Validate userId in req.params
+        const { userId } = users_1.UserIdValidator.parse(req.params);
+        const data = yield services_1.UsersService.promoteUserToAdmin(userId);
         res.status(200).json({
             status: "success",
             message: "ok",
@@ -113,17 +97,13 @@ const promoteUserToAdminController = (req, res) => __awaiter(void 0, void 0, voi
         return (0, errors_1.apiErrorHandler)(res, error);
     }
 });
-exports.promoteUserToAdmin = promoteUserToAdminController;
-const demoteAdminToUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = req.params;
-    if (!userId) {
-        res.status(400).json({
-            status: "error",
-            message: "Invalid user ID",
-        });
-    }
+exports.promoteUserToAdmin = promoteUserToAdmin;
+// admin demotion
+const demoteAdminToUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield usersService.demoteAdminToUser(userId);
+        // Validate userId in req.params
+        const { userId } = users_1.UserIdValidator.parse(req.params);
+        const data = yield services_1.UsersService.demoteAdminToUser(userId);
         res.status(200).json({
             status: "success",
             message: "ok",
@@ -134,4 +114,4 @@ const demoteAdminToUserController = (req, res) => __awaiter(void 0, void 0, void
         return (0, errors_1.apiErrorHandler)(res, error);
     }
 });
-exports.demoteAdminToUser = demoteAdminToUserController;
+exports.demoteAdminToUser = demoteAdminToUser;

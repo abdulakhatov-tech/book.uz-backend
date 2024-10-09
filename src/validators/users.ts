@@ -14,10 +14,18 @@ export const UpdateUserBodyValidator = z.object({
   bio: z.string().optional(),
   balance: z.number().optional(),
   frozenBalance: z.number().optional(),
-  lastEnteredAt: z.date().optional(),
+  lastEnteredAt: z.string().optional(),
   billingAddress: z.object({
-    region: z.instanceof(Types.ObjectId).nullable().optional(),
-    district: z.instanceof(Types.ObjectId).nullable().optional(),
-    details: z.string().optional(),
+    region: z.preprocess((value) => {
+      if (typeof value === 'string') return new Types.ObjectId(value);
+      return value;
+    }, z.instanceof(Types.ObjectId).nullable().optional()),
+    
+    district: z.preprocess((value) => {
+      if (typeof value === 'string') return new Types.ObjectId(value);
+      return value;
+    }, z.instanceof(Types.ObjectId).nullable().optional()),
+    
+    extraAddress: z.string().optional(),
   }).optional(),
 });

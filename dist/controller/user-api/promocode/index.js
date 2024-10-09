@@ -9,30 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const helpers_1 = require("../../../helpers");
-const services_1 = require("../../../services");
+exports.getDiscountByPromocode = void 0;
 const errors_1 = require("../../../errors");
-const auth_1 = require("../../../validators/auth");
-const verifyOTP = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const services_1 = require("../../../services");
+const promocode_validation_1 = require("../../../validators/promocode.validation");
+const promocodeService = new services_1.PromocodeService();
+const getDiscountByPromocode = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Validate and parse the request body
-        const body = auth_1.OTPVerificationValidator.parse(req.body);
-        // Verify OTP
-        const user = yield services_1.AuthService.verifyOTP(body);
-        // Create JWT token for the user
-        const token = yield (0, helpers_1.createToken)(user);
-        // Respond with success
-        return res.status(201).json({
+        const { couponCode } = promocode_validation_1.promocodeSchema.parse(req.body);
+        const data = yield promocodeService.getDiscountByPromocode(couponCode);
+        res.status(200).json({
             status: "success",
-            message: "OTP verified successfully",
-            data: {
-                token,
-                user,
-            },
+            message: "ok",
+            data,
         });
     }
-    catch (error) {
-        return (0, errors_1.apiErrorHandler)(res, error);
+    catch (err) {
+        return (0, errors_1.apiErrorHandler)(res, err);
     }
 });
-exports.default = verifyOTP;
+exports.getDiscountByPromocode = getDiscountByPromocode;

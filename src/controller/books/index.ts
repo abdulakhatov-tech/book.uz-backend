@@ -34,6 +34,7 @@ const getAll = async (req: Request, res: Response) => {
       authorIds = "",
       sort = "createdAt",
       asc = "-1",
+      search = "",
     } = req.query;
 
     const pageNum = parseInt(page as string, 10);
@@ -51,12 +52,14 @@ const getAll = async (req: Request, res: Response) => {
     if (language) filters.language = language;
     if (authorIds) filters.authorIds = authorIds;
 
+
     const { books, totalBooks, totalPages } = await booksService.getAllBooks({
       page: pageNum,
       limit: limitNum,
       sort,
       asc: ascNum,
       filters,
+      search,
     });
 
     // Return a well-structured JSON response

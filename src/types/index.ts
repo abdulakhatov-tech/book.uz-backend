@@ -53,7 +53,7 @@ export interface BookOrder {
   quantity: number;
 }
 
-export interface Address {
+export interface BillingAddress {
   region: string; // or Schema.Types.ObjectId if you want to enforce ObjectId type
   district: string; // or Schema.Types.ObjectId if you want to enforce ObjectId type
   extraAddress: string;
@@ -64,8 +64,9 @@ export interface Order extends Document {
   books: BookOrder[];
   deliveryMethod: 'courier' | 'pickup' | 'postal';
   paymentMethod: 'payme' | 'click' | 'cash';
-  address: Address;
+  address: BillingAddress;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  price: number;
   createdAt?: Date; // Optional, if you are using timestamps
   updatedAt?: Date; // Optional, if you are using timestamps
 }
@@ -133,8 +134,7 @@ export interface INews {
   updatedAt: Date;
   isRead: number,
   readCount: number,
-  type: 'news' | 'newBook' | 'discounts',
-  link?: string;
+  type: 'news' | 'newBook',
   book?: any
 }
 

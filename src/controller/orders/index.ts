@@ -8,6 +8,21 @@ import {
 } from "../../validators/orders";
 import { UserIdValidator } from "../../validators/users";
 
+export const getAllOrders = async(req: Request, res: Response) => {
+  try{
+    const data = await OrdersService.getAllOrders();
+
+    res.status(200).json({
+      status: "success",
+      message: "ok",
+      data
+    })
+  } catch (error) {
+    return apiErrorHandler(res, error);
+  }
+
+}
+
 export const createOrder = async (req: Request, res: Response) => {
   try {
     const body = OrderValidatorSchema.parse(req.body);

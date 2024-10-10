@@ -4,7 +4,7 @@ import BookModel from "../../models/book";
 class BooksService {
   constructor() {}
 
-  async getAllBooks({ page, limit, sort, asc, filters }: any) {
+  async getAllBooks({ page, limit, sort, asc, filters, search }: any) {
     const query: any = {};
 
     // Genre filter
@@ -44,6 +44,14 @@ class BooksService {
           ? { $in: filters.authorIds }
           : filters.authorIds;
       }
+    }
+
+    // Search functionality
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } }, // Book name
+        { "author.fullName": { $regex: search, $options: "i" } }, // Author full name
+      ];
     }
 
     // Sorting logic

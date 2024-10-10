@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const AddressSchema = z.object({
+const BillingAddressSchema = z.object({
   region: z.string().length(24, { message: "Invalid region ID" }), // Assuming ObjectId as a 24-character hex string
   district: z.string().length(24, { message: "Invalid district ID" }), // Assuming ObjectId as a 24-character hex string
   extraAddress: z.string().min(1, { message: "Extra address is required" }),
@@ -22,7 +22,9 @@ export const OrderValidatorSchema = z.object({
   payment_method: z.enum(["payme", "click", "cash"], {
     required_error: "Payment method is required",
   }),
-  address: AddressSchema,
+  billingAddress: BillingAddressSchema,
+  extra_note: z.string().optional(),
+  price: z.number()
 });
 
 export const OrderIdValidationSchema = z.object({
@@ -31,7 +33,7 @@ export const OrderIdValidationSchema = z.object({
 })
 
 export const OrderStatusValidationSchema = z.object({
-    status: z.enum(["pending", "processing", "completed", "cancelled"], {
+    status: z.enum(["pending", "processing", "delivered", "canceled"], {
         required_error: "Status is required"
     })
 })

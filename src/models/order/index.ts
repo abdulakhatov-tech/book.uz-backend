@@ -31,7 +31,7 @@ const OrderSchema = new Schema({
         enum: ['payme', 'click', 'cash'],
         required: true
     },
-    address: {
+    billingAddress: {
         region: {
             type: Schema.Types.ObjectId,
             ref:'region',
@@ -47,11 +47,20 @@ const OrderSchema = new Schema({
             required: true,
         }
     },
+    extra_note: {
+        type: String,
+        default: ''
+    },
     status: {
         type: String,
-        enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+        enum: ['pending', 'processing', 'delivered', 'canceled'],
         default: 'pending'
     },
+    price: {
+        type: Number,
+        required: true,
+        default: 0
+    }
 },{
     timestamps: true,
 })

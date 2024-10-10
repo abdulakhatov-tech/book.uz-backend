@@ -30,29 +30,14 @@ const newsSchema = new Schema<INews>(
     },
     type: {
       type: String,
-      enum: ["news", "newBook", 'discounts'],
+      enum: ["news", "newBook"],
       default: "news",
-    },
-    link: {
-      type: String,
     },
   },
   {
     timestamps: true,
   }
 );
-
-newsSchema.pre<INews>("save", function (next) {
-  if (this.title && this.title.length > 0) {
-    this.link = this.title
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, "") // Remove all punctuation and symbols except hyphens
-      .replace(/\s+/g, "-")      // Replace spaces with hyphens
-      .trim();                   // Trim leading/trailing spaces or hyphens
-  }
-
-  next();
-});
 
 const newsModel =  model<INews>('news', newsSchema);
 

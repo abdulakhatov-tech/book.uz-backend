@@ -181,4 +181,5 @@ export interface PromocodeI {
   code: string;
   discount: number;
   isActive: boolean;
+  minimumPice: number;
 }

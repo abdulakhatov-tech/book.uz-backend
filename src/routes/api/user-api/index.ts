@@ -2,10 +2,10 @@ import { Router } from "express";
 
 import { verifyToken } from "../../../middlewares/verifyToken";
 import { getAllRegions } from "../../../controller/user-api/regions";
-import { getDiscountByPromocode } from "../../../controller/user-api/promocode";
 import { getAllPaymentMethods } from "../../../controller/user-api/payment-methods";
 import { getAllDeliveryMethods } from "../../../controller/user-api/delivery-methods";
 import { getAllDistrictsRelatedToRegions } from "../../../controller/user-api/districts";
+import { getDiscountByPromocode } from "../../../controller/user-api/promocode";
 
 const router = Router();
 

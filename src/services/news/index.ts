@@ -6,8 +6,6 @@ class NewsService {
   async getAll({page, limit, type}: {page: number, limit: number; type: 'all' | 'news' | 'newBook' | 'discounts'}) {
     const skip = (page - 1) * limit;
 
-    console.log(page, limit, type)
-
     const query: any = {};
 
     if (type !== 'all') {

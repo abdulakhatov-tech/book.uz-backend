@@ -18,8 +18,6 @@ export const getAll = async (req: Request, res: Response) => {
       limit
     });
 
-    console.log(data)
-
     res.status(200).json({
       status: "success",
       message: "ok",

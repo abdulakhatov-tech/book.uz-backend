@@ -12,7 +12,8 @@ import {
   bannersRouting,
   reviewsRouting,
   categoriesRouting,
-  statisticsRouting
+  statisticsRouting,
+  stripe
 } from "./api";
 
 const router = Router();
@@ -30,5 +31,6 @@ router.use("/banners", bannersRouting);
 router.use("/user-api", userApiRouting);
 router.use("/category", categoriesRouting);
 router.use('/statistics', statisticsRouting);
+router.use('/stripe', stripe)
 
 export default router;

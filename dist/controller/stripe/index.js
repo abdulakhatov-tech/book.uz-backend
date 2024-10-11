@@ -16,11 +16,15 @@ exports.createCheckoutSession = void 0;
 const stripe_1 = __importDefault(require("stripe"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const stripe = new stripe_1.default(process.env.STRIPE_KEY);
+const stripeKey = process.env.STRIPE_KEY;
+if (!stripeKey) {
+    throw new Error("Stripe API key is missing from environment variables.");
+}
+const stripe = new stripe_1.default(stripeKey);
 const createCheckoutSession = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { books, couponCode, delivery, payment_method } = req.body;
+    const { books, couponCode } = req.body;
     // Calculate total price based on the books provided
-    let totalPrice = books.reduce((acc, item) => acc + (item.bookPrice * item.quantity), 0);
+    let totalPrice = books.reduce((acc, item) => acc + item.bookPrice * item.quantity, 0);
     // Apply couponCode as a percentage discount if available
     if (couponCode) {
         const discount = (couponCode / 100) * totalPrice;
@@ -32,7 +36,7 @@ const createCheckoutSession = (req, res) => __awaiter(void 0, void 0, void 0, fu
             currency: "usd",
             product_data: {
                 name: item.book.name,
-                images: [item.book.imgUrl] // Ensure you have the book name here
+                images: [item.book.imgUrl], // Ensure you have the book name here
             },
             unit_amount: item.bookPrice * 100, // Convert to cents
         },

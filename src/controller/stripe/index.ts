@@ -12,7 +12,7 @@ if (!stripeKey) {
 const stripe = new Stripe(stripeKey);
 
 export const createCheckoutSession = async (req: Request, res: Response) => {
-  const { books, couponCode, delivery, payment_method } = req.body;
+  const { books, couponCode} = req.body;
 
   // Calculate total price based on the books provided
   let totalPrice = books.reduce(

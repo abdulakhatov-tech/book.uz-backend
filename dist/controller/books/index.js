@@ -32,7 +32,7 @@ const requiredFields = [
 const booksService = new services_1.BooksService();
 const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { page = "1", limit = "9", genreIds = "", fromPrice = "0", toPrice = "1000000", language = "", authorIds = "", sort = "createdAt", asc = "-1", } = req.query;
+        const { page = "1", limit = "9", genreIds = "", fromPrice = "0", toPrice = "1000000", language = "", authorIds = "", sort = "createdAt", asc = "-1", search = "", } = req.query;
         const pageNum = parseInt(page, 10);
         const limitNum = parseInt(limit, 10);
         const fromPriceNum = parseFloat(fromPrice);
@@ -56,6 +56,7 @@ const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             sort,
             asc: ascNum,
             filters,
+            search,
         });
         // Return a well-structured JSON response
         return res.status(200).json({

@@ -9,29 +9,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteById = exports.updateById = exports.create = exports.getAll = void 0;
-const errors_1 = require("../../errors");
+exports.updateOrderStatus = exports.getUserOrders = exports.createOrder = exports.getAllOrders = void 0;
 const services_1 = require("../../services");
-const pagination_1 = require("../../validators/pagination");
-const banners_1 = require("../../validators/banners");
-const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const errors_1 = require("../../errors");
+const orders_1 = require("../../validators/orders");
+const users_1 = require("../../validators/users");
+const getAllOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { page, limit } = pagination_1.PaginationQueryValidator.parse(req.query);
-        const data = yield services_1.BannersService.getAll({
-            page,
-            limit
+        const data = yield services_1.OrdersService.getAllOrders();
+        res.status(200).json({
+            status: "success",
+            message: "ok",
+            data
         });
-        res.status(200).json(Object.assign({ status: "success", message: "ok" }, data));
     }
     catch (error) {
         return (0, errors_1.apiErrorHandler)(res, error);
     }
 });
-exports.getAll = getAll;
-const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllOrders = getAllOrders;
+const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const body = banners_1.CreateBannerValidator.parse(req.body);
-        const data = yield services_1.BannersService.create(body);
+        const body = orders_1.OrderValidatorSchema.parse(req.body);
+        const data = yield services_1.OrdersService.createOrder(body);
         res.status(201).json({
             status: "success",
             message: "ok",
@@ -42,12 +42,11 @@ const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return (0, errors_1.apiErrorHandler)(res, error);
     }
 });
-exports.create = create;
-const updateById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createOrder = createOrder;
+const getUserOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { bannerId } = banners_1.BannerIdValidator.parse(req.params);
-        const body = banners_1.UpdateBannerValidator.parse(req.body);
-        const data = yield services_1.BannersService.updateById(bannerId, body);
+        const { userId } = users_1.UserIdValidator.parse(req.params);
+        const data = yield services_1.OrdersService.getUserOrders(userId);
         res.status(200).json({
             status: "success",
             message: "ok",
@@ -58,18 +57,20 @@ const updateById = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return (0, errors_1.apiErrorHandler)(res, error);
     }
 });
-exports.updateById = updateById;
-const deleteById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getUserOrders = getUserOrders;
+const updateOrderStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { bannerId } = banners_1.BannerIdValidator.parse(req.params);
-        yield services_1.BannersService.deleteById(bannerId);
-        res.status(204).json({
+        const { orderId } = orders_1.OrderIdValidationSchema.parse(req.params);
+        const { status } = orders_1.OrderStatusValidationSchema.parse(req.body);
+        const data = yield services_1.OrdersService.updateOrderStatus(orderId, status);
+        res.status(200).json({
             status: "success",
             message: "ok",
+            data,
         });
     }
     catch (error) {
         return (0, errors_1.apiErrorHandler)(res, error);
     }
 });
-exports.deleteById = deleteById;
+exports.updateOrderStatus = updateOrderStatus;

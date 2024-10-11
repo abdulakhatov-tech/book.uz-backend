@@ -26,7 +26,12 @@ app.use(express_1.default.static("public"));
 app.use((0, helmet_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use((0, cors_1.default)());
+// app.use(cors());
+app.use((0, cors_1.default)({
+    origin: process.env.CLIENT_URL || 'http://localhost:5173', // Replace with your frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 // Routes config
 app.use('/api', routes_1.default);
 const startServer = () => {

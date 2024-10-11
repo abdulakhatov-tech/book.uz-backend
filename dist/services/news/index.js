@@ -15,7 +15,6 @@ class NewsService {
     getAll(_a) {
         return __awaiter(this, arguments, void 0, function* ({ page, limit, type }) {
             const skip = (page - 1) * limit;
-            console.log(page, limit, type);
             const query = {};
             if (type !== 'all') {
                 query.type = type;

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeliveryMethodsService = exports.PaymentMethodsService = exports.PromocodeService = exports.DistrictsService = exports.RegionsService = exports.CategoriesService = exports.StatisticsService = exports.AuthorsService = exports.ReviewsService = exports.BannersService = exports.GenresService = exports.OTPService = exports.BooksService = exports.UsersService = exports.AuthService = exports.NewsService = void 0;
+exports.DeliveryMethodsService = exports.PaymentMethodsService = exports.PromocodeService = exports.DistrictsService = exports.RegionsService = exports.CategoriesService = exports.StatisticsService = exports.AuthorsService = exports.ReviewsService = exports.BannersService = exports.GenresService = exports.OrdersService = exports.OTPService = exports.BooksService = exports.UsersService = exports.AuthService = exports.NewsService = void 0;
 var news_1 = require("./news");
 Object.defineProperty(exports, "NewsService", { enumerable: true, get: function () { return __importDefault(news_1).default; } });
 var auth_1 = require("./auth");
@@ -14,6 +14,8 @@ var books_1 = require("./books");
 Object.defineProperty(exports, "BooksService", { enumerable: true, get: function () { return __importDefault(books_1).default; } });
 var otp_1 = require("./auth/otp");
 Object.defineProperty(exports, "OTPService", { enumerable: true, get: function () { return __importDefault(otp_1).default; } });
+var orders_1 = require("./orders");
+Object.defineProperty(exports, "OrdersService", { enumerable: true, get: function () { return __importDefault(orders_1).default; } });
 var genres_1 = require("./genres");
 Object.defineProperty(exports, "GenresService", { enumerable: true, get: function () { return __importDefault(genres_1).default; } });
 var banners_1 = require("./banners");

@@ -16,7 +16,7 @@ const book_1 = __importDefault(require("../../models/book"));
 class BooksService {
     constructor() { }
     getAllBooks(_a) {
-        return __awaiter(this, arguments, void 0, function* ({ page, limit, sort, asc, filters }) {
+        return __awaiter(this, arguments, void 0, function* ({ page, limit, sort, asc, filters, search }) {
             const query = {};
             // Genre filter
             if (filters.genreIds) {
@@ -52,6 +52,13 @@ class BooksService {
                         ? { $in: filters.authorIds }
                         : filters.authorIds;
                 }
+            }
+            // Search functionality
+            if (search) {
+                query.$or = [
+                    { name: { $regex: search, $options: "i" } }, // Book name
+                    { "author.fullName": { $regex: search, $options: "i" } }, // Author full name
+                ];
             }
             // Sorting logic
             const sortOptions = {
